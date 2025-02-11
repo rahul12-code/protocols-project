@@ -1,12 +1,27 @@
-import React from 'react'
-
+import MainLayout from "./layouts/MainLayout";
+import ProtocolsPage from "./pages/ProtocolsPage";
+import PageNotFound from "./pages/PageNotFound";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createRoutesFromElements,
+  Route,
+} from "react-router-dom";
 const App = () => {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<ProtocolsPage />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Route>
+    )
+  );
+
   return (
     <>
-      <h1 className='bg-red-500 italic text-5xl'>Hello React</h1>
-      
+      <RouterProvider router={router} />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
