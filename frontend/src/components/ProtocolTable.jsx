@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getAllProtocols } from "../../services/get/getAllProtocols";
-import { headingsConfig } from "../../config/HeadingsConfig";
+import { getAllProtocols } from "../services/get/getAllProtocols";
+import { headingsConfig } from "../config/HeadingsConfig";
 import {
   Box,
   Button,

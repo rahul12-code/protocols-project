@@ -1,5 +1,5 @@
 import React from "react";
-import ProtocolTable from "../components/ProtocolTable/ProtocolTable";
+import ProtocolTable from "../components/ProtocolTable";
 import { NewProtocolModal } from "../components/Modals/NewProtocolModal";
 import { useState } from "react";
 import { CancelWarningModal } from "../components/Modals/CancelWarningModal";
@@ -27,7 +27,6 @@ const ProtocolsPage = () => {
         onClose={() => setIsCancelOpen(true)}
         isCancelOpen={isCancelOpen}
         handleModalIsOpen={handleModalOpen}
-        allProtocols={allProtocols}
         setAllProtocols={setAllProtocols}
       />
       <CancelWarningModal

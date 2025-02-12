@@ -123,7 +123,7 @@ export function ProtocolModalItems({
                 return (
                   <MenuItem key={user.id} value={fullName}>
                     <ListItemText primary={fullName} />
-                    {selectedRoles[role.id]?.includes(fullName) && (
+                    {selectedRoles[role.apiCode]?.includes(fullName) && (
                       <CheckIcon />
                     )}
                   </MenuItem>
