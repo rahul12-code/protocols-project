@@ -13,6 +13,9 @@ export class ProtocolRole {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: false })
+  role_name: string;
+
   @ManyToOne(() => Protocol, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'protocol_id' })
   protocol: Protocol;
@@ -20,7 +23,4 @@ export class ProtocolRole {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'role_user_id' })
   roleUser: User;
-
-  @Column({ nullable: false })
-  role_name: string;
 }

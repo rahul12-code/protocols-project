@@ -21,30 +21,38 @@ export class ProtocolsService {
   ) {}
 
   async create(createProtocolDto: CreateProtocolDto) {
-    // Step 1: Create the protocol
+    // Creating the protocol
     const protocol = this.protocolRepository.create({
-      protocol_code: createProtocolDto.protocol_id,
+      protocol_code: createProtocolDto.protocol_key,
     });
     await this.protocolRepository.save(protocol);
+    console.log(protocol);
 
-    // Step 2: Create the protocol roles
-    const roles: ProtocolRole[] = []; // Explicitly defining the type
+    // Creating protocol_roles
+    const roles: ProtocolRole[] = [];
 
     for (const [roleName, userNames] of Object.entries(createProtocolDto)) {
-      if (roleName !== 'protocol_id') {
+      if (roleName !== 'protocol_key') {
         for (const userName of userNames) {
           const [firstName, lastName] = userName.split(' ');
 
-          // Find the user by first and last name
+          // Finding user by first and last name
           const user = await this.userRepository.findOne({
             where: { first_name: firstName, last_name: lastName },
           });
 
+          console.log(user)
+
+          if (!user) {
+            console.log(`User not found: ${firstName} ${lastName}`);
+            continue;
+          }          
+
           if (user) {
             const role = this.protocolRoleRepository.create({
-              protocol,
-              roleUser: user,
               role_name: roleName,
+              protocol: protocol,
+              roleUser: user,
             });
 
             roles.push(role);
@@ -52,39 +60,39 @@ export class ProtocolsService {
         }
       }
     }
-
-    // Save all roles in bulk
+    // Save all roles
     await this.protocolRoleRepository.save(roles);
 
     return { message: 'Protocol created successfully', protocol, roles };
   }
 
-  
   async findAll() {
     const protocols = await this.protocolRepository.find({
       relations: ['protocolRoles', 'protocolRoles.roleUser'],
     });
-  
-    return protocols.map((protocol) => {
+
+    console.log(protocols)
+
+    return protocols.map((protocol, index) => {
       const formattedProtocol: any = {
-        protocol_id: protocol.protocol_code,
+        id : index+1,
+        protocol_key: protocol.protocol_code,
       };
-  
+
       // Group users by their roles
       for (const role of protocol.protocolRoles) {
         const fullName = `${role.roleUser.first_name} ${role.roleUser.last_name}`;
-  
+
         if (!formattedProtocol[role.role_name]) {
           formattedProtocol[role.role_name] = [];
         }
-  
+
         formattedProtocol[role.role_name].push(fullName);
       }
-  
+
       return formattedProtocol;
     });
   }
-  
 
   findOne(id: number) {
     return `This action returns a #${id} protocol`;
