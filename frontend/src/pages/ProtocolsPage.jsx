@@ -1,5 +1,12 @@
+import React from "react";
+import ProtocolTable from "../components/ProtocolTable";
+
 const ProtocolsPage = () => {
-  return <div>ProtocolsPage</div>;
+  return (
+    <>
+      <ProtocolTable />
+    </>
+  );
 };
 
 export default ProtocolsPage;

@@ -3,7 +3,9 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  OneToMany 
 } from 'typeorm';
+ import { ProtocolRole } from './protocolrole.entity';
 
 @Entity('protocols')
 export class Protocol {
@@ -13,9 +15,9 @@ export class Protocol {
   @Column({ nullable: false })
   protocol_code: string;
 
-  @Column({ nullable: true })
-  created_by: string;
-
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
+
+  @OneToMany(() => ProtocolRole, (protocolRole) => protocolRole.protocol)
+  protocolRoles: ProtocolRole[];
 }
