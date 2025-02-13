@@ -33,11 +33,7 @@ export function NewProtocolModal({
     }
   }, [open, selectedProtocol]);
 
-  console.log(selectedRoles, protocolCode);
-
   const handleRoleChange = (event, role) => {
-    console.log(event);
-    console.log(role);
     setSelectedRoles((prev) => ({
       ...prev,
       [role.apiCode]: Array.isArray(event.target.value)
@@ -52,7 +48,6 @@ export function NewProtocolModal({
   };
 
   const handleOnSave = async () => {
-
     const protocol = {
       protocol_key: protocolCode,
       ...selectedRoles,
@@ -100,7 +95,10 @@ export function NewProtocolModal({
       sx={{ "& .MuiBackdrop-root": { backgroundColor: "rgba(0, 0, 0, 0.5)" } }}
     >
       <Box id="new-protocol-modal" sx={newProtocolStyles.container}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          id="protocol-modal-container"
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
           <Typography variant="h6">Add Protocol Users</Typography>
           <Box id="close/save-buttons">
             <Button
@@ -130,7 +128,6 @@ export function NewProtocolModal({
           required
         </Typography>
         <ProtocolModalItems
-          selectedProtocol={selectedProtocol}
           protocolCode={protocolCode}
           selectedRoles={selectedRoles}
           setSelectedRoles={setSelectedRoles}

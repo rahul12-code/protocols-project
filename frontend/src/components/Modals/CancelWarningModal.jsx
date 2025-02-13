@@ -13,19 +13,14 @@ export function CancelWarningModal({
       sx={{ "& .MuiBackdrop-root": { backgroundColor: "rgba(0, 0, 0, 0.5)" } }}
     >
       <Box
-        sx={{
-          ...newProtocolStyles.container,
-          width: "30vw",
-          height: "30vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "30px",
-        }}
+        id="cancel-modal"
+        sx={[
+          newProtocolStyles.container,
+          newProtocolStyles.cancelContainerStyles,
+        ]}
       >
         <Typography variant="h5">Are you sure you want to cancel?</Typography>
-        <Box>
+        <Box id="no-yes-button">
           <Button
             variant="outlined"
             onClick={handleCancelModalOpen}
