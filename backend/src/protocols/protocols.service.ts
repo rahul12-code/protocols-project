@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Protocol } from './entities/protocol.entity';
@@ -6,6 +6,7 @@ import { ProtocolRole } from './entities/protocolrole.entity';
 import { User } from 'src/users/entities/user.entity';
 import { CreateProtocolDto } from './dto/create-protocol.dto';
 import { UpdateProtocolDto } from './dto/update-protocol.dto';
+import { error } from 'console';
 
 @Injectable()
 export class ProtocolsService {
@@ -41,12 +42,12 @@ export class ProtocolsService {
             where: { first_name: firstName, last_name: lastName },
           });
 
-          console.log(user)
+          console.log(user);
 
           if (!user) {
             console.log(`User not found: ${firstName} ${lastName}`);
             continue;
-          }          
+          }
 
           if (user) {
             const role = this.protocolRoleRepository.create({
@@ -71,11 +72,11 @@ export class ProtocolsService {
       relations: ['protocolRoles', 'protocolRoles.roleUser'],
     });
 
-    console.log(protocols)
+    console.log(protocols);
 
     return protocols.map((protocol, index) => {
       const formattedProtocol: any = {
-        id : index+1,
+        id: index + 1,
         protocol_key: protocol.protocol_code,
       };
 
@@ -98,8 +99,54 @@ export class ProtocolsService {
     return `This action returns a #${id} protocol`;
   }
 
-  update(id: number, updateProtocolDto: UpdateProtocolDto) {
-    return `This action updates a #${id} protocol`;
+  async updateProtocol(updateProtocolDto: UpdateProtocolDto) {
+    const protocol = await this.protocolRepository.findOne({
+      where: { protocol_code: updateProtocolDto.protocol_key },
+      relations: ['protocolRoles'],
+    });
+    if (!protocol) {
+      throw new NotFoundException(
+        `Protocol with key ${updateProtocolDto.protocol_key} not found.`,
+      );
+    }
+    await this.protocolRoleRepository.delete({ protocol: { id: protocol.id } });
+
+    const rolesToInsert: ProtocolRole[] = [];
+
+    const roleMappings = {
+      ra_lead: updateProtocolDto.ra_lead,
+      clinical_labelling_manager: updateProtocolDto.clinical_labelling_manager,
+      cta_sm: updateProtocolDto.cta_sm,
+      cta_associate: updateProtocolDto.cta_associate,
+      study_lead: updateProtocolDto.study_lead,
+    };
+
+    for (const [roleName, userNames] of Object.entries(roleMappings)) {
+      if (userNames && userNames.length > 0) {
+        for (const fullName of userNames) {
+          const [firstName, lastName] = fullName.trim().split(' ');
+
+          const user = await this.userRepository.findOne({
+            where: { first_name: firstName, last_name: lastName ?? '' },
+          });
+
+          if (user) {
+            const protocolRole = this.protocolRoleRepository.create({
+              role_name: roleName,
+              protocol,
+              roleUser: user,
+            });
+            rolesToInsert.push(protocolRole);
+          }
+        }
+      }
+    }
+
+    if (rolesToInsert.length > 0) {
+      await this.protocolRoleRepository.save(rolesToInsert);
+    }
+
+    return protocol;
   }
 
   remove(id: number) {

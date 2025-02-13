@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ProtocolsService } from './protocols.service';
 import { CreateProtocolDto } from './dto/create-protocol.dto';
 import { UpdateProtocolDto } from './dto/update-protocol.dto';
@@ -22,9 +30,9 @@ export class ProtocolsController {
     return this.protocolsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProtocolDto: UpdateProtocolDto) {
-    return this.protocolsService.update(+id, updateProtocolDto);
+  @Patch('/edit')
+  update(@Body() updateProtocolDto: UpdateProtocolDto) {
+    return this.protocolsService.updateProtocol(updateProtocolDto);
   }
 
   @Delete(':id')
