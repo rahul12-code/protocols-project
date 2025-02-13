@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { getAllProtocols } from "../services/get/getAllProtocols";
 import { headingsConfig } from "../config/HeadingsConfig";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 
 const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
+
   useEffect(() => {
     async function fetchProtocols() {
       try {
@@ -58,6 +59,7 @@ const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
                   {heading.name}
                 </TableCell>
               ))}
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -73,6 +75,15 @@ const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
                 <TableCell>{protocol.cta_sm?.join(", ")}</TableCell>
                 <TableCell>{protocol.cta_associate?.join(", ")}</TableCell>
                 <TableCell>{protocol.study_lead?.join(", ")}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => handleModalOpen(protocol)} // Pass protocol data for editing
+                  >
+                    Edit
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

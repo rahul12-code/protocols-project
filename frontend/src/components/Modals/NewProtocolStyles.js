@@ -5,7 +5,7 @@ export const newProtocolStyles = {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "50vw",
-    height: "55vh",
+    height: "70vh",
     bgcolor: "white",
     boxShadow: 24,
     borderRadius: 2,

@@ -1,11 +1,11 @@
-export async function createNewProtocol(createProtocol) {
+export async function createNewProtocol(newProtocol) {
   try {
     const response = await fetch("http://localhost:5000/protocols", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(createProtocol),
+      body: JSON.stringify(newProtocol),
     });
 
     if (!response.ok) {

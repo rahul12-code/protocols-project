@@ -8,9 +8,13 @@ const ProtocolsPage = () => {
   const [isOpen, setOpen] = useState(false);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [allProtocols, setAllProtocols] = useState([]);
-  const handleModalOpen = () => {
+  const [selectedProtocol, setSelectedProtocol] = useState(null); // New state to store selected protocol
+
+  const handleModalOpen = (protocol = null) => {
+    setSelectedProtocol(protocol); // Store the selected protocol data when editing
     setOpen((prev) => !prev);
   };
+
   const handleCancelModalOpen = () => {
     setIsCancelOpen((prev) => !prev);
   };
@@ -27,7 +31,9 @@ const ProtocolsPage = () => {
         onClose={() => setIsCancelOpen(true)}
         isCancelOpen={isCancelOpen}
         handleModalIsOpen={handleModalOpen}
+        allProtocols={allProtocols}
         setAllProtocols={setAllProtocols}
+        selectedProtocol={selectedProtocol}
       />
       <CancelWarningModal
         isCancelOpen={isCancelOpen}

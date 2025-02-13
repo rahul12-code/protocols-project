@@ -9,13 +9,14 @@ import {
   Chip,
   ListItemText,
 } from "@mui/material";
-
 import CheckIcon from "@mui/icons-material/Check";
 
 import { rolesDropdownConfig } from "../../../config/RolesDropdownConfig";
 import { getAllUsers } from "../../../services/get/getAllUsers";
 
 export function ProtocolModalItems({
+  selectedProtocol,
+  protocolCode,
   selectedRoles,
   handleRoleChange,
   handleProtocolChange,
@@ -60,10 +61,12 @@ export function ProtocolModalItems({
           type="text"
           variant="outlined"
           placeholder="Add Protocol ID"
+          value={protocolCode}
           onChange={(e) => {
             handleProtocolChange(e);
           }}
           helperText="Only Alphanumeric characters are allowed"
+          // disabled={!!selectedProtocol}
           sx={{
             "& .MuiOutlinedInput-root": {
               fontSize: "14px",

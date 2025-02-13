@@ -3,21 +3,38 @@ import { Modal, Box, Typography, Button, Divider } from "@mui/material";
 import { newProtocolStyles } from "./NewProtocolStyles";
 import { ProtocolModalItems } from "./components/ProtocolModalItems";
 import { createNewProtocol } from "../../services/post/createProtocol";
+import { updateProtocol } from "../../services/patch/updateProtocol";
+
 export function NewProtocolModal({
   open,
   onClose,
   handleModalIsOpen,
+  allProtocols,
   setAllProtocols,
+  selectedProtocol,
 }) {
   const [selectedRoles, setSelectedRoles] = useState({});
   const [protocolCode, setProtocolCode] = useState("");
 
   useEffect(() => {
-    setSelectedRoles({});
-    setProtocolCode("");
-  }, [open]);
+    if (selectedProtocol) {
+      setSelectedRoles({
+        ra_lead: selectedProtocol.ra_lead || [],
+        clinical_labelling_manager:
+          selectedProtocol.clinical_labelling_manager || [],
+        cta_sm: selectedProtocol.cta_sm || [],
+        cta_associate: selectedProtocol.cta_associate || [],
+        study_lead: selectedProtocol.study_lead || [],
+      });
+      setProtocolCode(selectedProtocol.protocol_key || "");
+    } else {
+      setSelectedRoles({});
+      setProtocolCode("");
+    }
+  }, [open, selectedProtocol]);
 
   console.log(selectedRoles, protocolCode);
+
   const handleRoleChange = (event, role) => {
     const {
       target: { value },
@@ -34,20 +51,47 @@ export function NewProtocolModal({
   };
 
   const handleOnSave = async () => {
-    const createProtocol = {
+    const updatedProtocol = {
       protocol_key: protocolCode,
-      ra_lead: selectedRoles["ra_lead"],
-      clinical_labelling_manager: selectedRoles["clinical_labelling_manager"],
-      cta_sm: selectedRoles["cta_sm"],
-      cta_associate: selectedRoles["cta_associate"],
-      study_lead: selectedRoles["study_lead"],
+      ra_lead: selectedRoles["ra_lead"] || [],
+      clinical_labelling_manager:
+        selectedRoles["clinical_labelling_manager"] || [],
+      cta_sm: selectedRoles["cta_sm"] || [],
+      cta_associate: selectedRoles["cta_associate"] || [],
+      study_lead: selectedRoles["study_lead"] || [],
     };
-    console.log("created", createProtocol);
-    await createNewProtocol(createProtocol);
 
-    handleModalIsOpen();
-    setAllProtocols((prev) => [...prev, createProtocol]);
+    console.log("Saving Protocol:", updatedProtocol);
+
+    const existingIndex = allProtocols.findIndex(
+      (p) => p.protocol_key === protocolCode
+    );
+
+    try {
+      if (existingIndex > -1) {
+        // Existing protocol -> Call update function
+        await updateProtocol(updatedProtocol);
+      } else {
+        // New protocol -> Call create function
+        await createNewProtocol(updatedProtocol);
+      }
+
+      // Update UI state after successful API call
+      setAllProtocols((prev) => {
+        if (existingIndex > -1) {
+          const updatedList = [...prev];
+          updatedList[existingIndex] = updatedProtocol;
+          return updatedList;
+        }
+        return [...prev, updatedProtocol];
+      });
+
+      handleModalIsOpen();
+    } catch (error) {
+      console.error("Error saving protocol:", error);
+    }
   };
+
   return (
     <Modal
       open={open}
@@ -70,7 +114,10 @@ export function NewProtocolModal({
               onClick={handleOnSave}
               variant="contained"
               disabled={
-                !protocolCode || Object.keys(selectedRoles).length !== 5
+                !protocolCode ||
+                Object.values(selectedRoles).some(
+                  (roleArray) => roleArray.length === 0
+                )
               }
             >
               Save
@@ -83,10 +130,12 @@ export function NewProtocolModal({
           required
         </Typography>
         <ProtocolModalItems
+          selectedProtocol={selectedProtocol}
+          protocolCode={protocolCode}
           selectedRoles={selectedRoles}
+          setSelectedRoles={setSelectedRoles}
           handleRoleChange={handleRoleChange}
           handleProtocolChange={handleProtocolChange}
-          setSelectedRoles={setSelectedRoles}
         />
       </Box>
     </Modal>
