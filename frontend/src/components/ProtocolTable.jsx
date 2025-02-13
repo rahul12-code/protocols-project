@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { getAllProtocols } from "../services/get/getAllProtocols";
-import { headingsConfig } from "../config/HeadingsConfig";
 import {
   Box,
   Button,
@@ -14,6 +13,15 @@ import {
 } from "@mui/material";
 
 const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
+  
+  const columnNames = [
+    "Protocol ID",
+    "RA Lead",
+    "Clinical Labelling Manager",
+    "CTA SM",
+    "CTA Associate",
+    "Study Lead",
+  ];
 
   useEffect(() => {
     async function fetchProtocols() {
@@ -27,6 +35,7 @@ const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
     fetchProtocols();
   }, []);
   console.log(allProtocols);
+
   return (
     <Box sx={{ p: 4 }}>
       <Box
@@ -51,12 +60,12 @@ const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
         <Table>
           <TableHead sx={{ backgroundColor: "#f5f5f5" }}>
             <TableRow>
-              {headingsConfig.map((heading) => (
+              {columnNames.map((column, index) => (
                 <TableCell
-                  key={heading.id}
+                  key={index}
                   sx={{ fontWeight: "bold", width: "17%" }}
                 >
-                  {heading.name}
+                  {column}
                 </TableCell>
               ))}
               <TableCell></TableCell>

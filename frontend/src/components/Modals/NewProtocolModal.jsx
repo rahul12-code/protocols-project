@@ -26,7 +26,7 @@ export function NewProtocolModal({
         cta_associate: selectedProtocol.cta_associate || [],
         study_lead: selectedProtocol.study_lead || [],
       });
-      setProtocolCode(selectedProtocol.protocol_key || "");
+      setProtocolCode(selectedProtocol.protocol_key);
     } else {
       setSelectedRoles({});
       setProtocolCode("");
@@ -36,57 +36,57 @@ export function NewProtocolModal({
   console.log(selectedRoles, protocolCode);
 
   const handleRoleChange = (event, role) => {
-    const {
-      target: { value },
-    } = event;
+    console.log(event);
+    console.log(role);
     setSelectedRoles((prev) => ({
       ...prev,
-      [role.apiCode]: typeof value === "string" ? value.split(",") : value,
+      [role.apiCode]: Array.isArray(event.target.value)
+        ? event.target.value
+        : event.target.value.split(","),
     }));
   };
+
   const handleProtocolChange = (e) => {
-    const value = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
-    e.target.value = value;
-    setProtocolCode(value);
+    const sanitizedValue = e.target.value.replace(/[^a-zA-Z0-9]/g, ""); // Keeps only alphanumeric characters
+    setProtocolCode(sanitizedValue);
   };
 
   const handleOnSave = async () => {
-    const updatedProtocol = {
+
+    const protocol = {
       protocol_key: protocolCode,
-      ra_lead: selectedRoles["ra_lead"] || [],
-      clinical_labelling_manager:
-        selectedRoles["clinical_labelling_manager"] || [],
-      cta_sm: selectedRoles["cta_sm"] || [],
-      cta_associate: selectedRoles["cta_associate"] || [],
-      study_lead: selectedRoles["study_lead"] || [],
+      ...selectedRoles,
     };
+    console.log("Saving Protocol:", protocol);
 
-    console.log("Saving Protocol:", updatedProtocol);
-
-    const existingIndex = allProtocols.findIndex(
+    const existingProtocol = allProtocols.find(
       (p) => p.protocol_key === protocolCode
     );
 
     try {
-      if (existingIndex > -1) {
-        // Existing protocol -> Call update function
-        await updateProtocol(updatedProtocol);
+      if (existingProtocol) {
+        // Update existing protocol in the database
+        await updateProtocol(protocol);
       } else {
-        // New protocol -> Call create function
-        await createNewProtocol(updatedProtocol);
+        // Create a new protocol in the database
+        await createNewProtocol(protocol);
       }
 
       // Update UI state after successful API call
       setAllProtocols((prev) => {
-        if (existingIndex > -1) {
-          const updatedList = [...prev];
-          updatedList[existingIndex] = updatedProtocol;
-          return updatedList;
-        }
-        return [...prev, updatedProtocol];
-      });
+        const protocolExists = prev.some(
+          (p) => p.protocol_key === protocolCode
+        );
 
-      handleModalIsOpen();
+        if (protocolExists) {
+          return prev.map((p) =>
+            p.protocol_key === protocolCode ? protocol : p
+          );
+        } else {
+          return [...prev, protocol];
+        }
+      });
+      handleModalIsOpen(); // to close the modal
     } catch (error) {
       console.error("Error saving protocol:", error);
     }

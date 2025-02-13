@@ -39,7 +39,7 @@ export function ProtocolModalItems({
   const handleChipDelete = (role, valueToRemove) => {
     setSelectedRoles((prev) => ({
       ...prev,
-      [role.id]: prev[role.id]?.filter((item) => item !== valueToRemove) || [],
+      [role.apiCode]: prev[role.apiCode]?.filter((item) => item !== valueToRemove) || [],
     }));
   };
 
@@ -66,7 +66,7 @@ export function ProtocolModalItems({
             handleProtocolChange(e);
           }}
           helperText="Only Alphanumeric characters are allowed"
-          // disabled={!!selectedProtocol}
+          // disabled={protocolCode && selectedProtocol}
           sx={{
             "& .MuiOutlinedInput-root": {
               fontSize: "14px",

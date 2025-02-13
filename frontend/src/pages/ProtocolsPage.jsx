@@ -5,14 +5,14 @@ import { useState } from "react";
 import { CancelWarningModal } from "../components/Modals/CancelWarningModal";
 
 const ProtocolsPage = () => {
-  const [isOpen, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [allProtocols, setAllProtocols] = useState([]);
   const [selectedProtocol, setSelectedProtocol] = useState(null); // New state to store selected protocol
 
   const handleModalOpen = (protocol = null) => {
     setSelectedProtocol(protocol); // Store the selected protocol data when editing
-    setOpen((prev) => !prev);
+    setIsModalOpen((prev) => !prev);
   };
 
   const handleCancelModalOpen = () => {
@@ -27,9 +27,8 @@ const ProtocolsPage = () => {
         setAllProtocols={setAllProtocols}
       />
       <NewProtocolModal
-        open={isOpen}
+        open={isModalOpen}
         onClose={() => setIsCancelOpen(true)}
-        isCancelOpen={isCancelOpen}
         handleModalIsOpen={handleModalOpen}
         allProtocols={allProtocols}
         setAllProtocols={setAllProtocols}
