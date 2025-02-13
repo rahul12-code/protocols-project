@@ -10,12 +10,12 @@ import {
   ListItemText,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
+import { protocolModalItemStyles } from "./ProtocolModalItemsStyles";
 
 import { rolesDropdownConfig } from "../../../config/RolesDropdownConfig";
 import { getAllUsers } from "../../../services/get/getAllUsers";
 
 export function ProtocolModalItems({
-  selectedProtocol,
   protocolCode,
   selectedRoles,
   handleRoleChange,
@@ -39,21 +39,17 @@ export function ProtocolModalItems({
   const handleChipDelete = (role, valueToRemove) => {
     setSelectedRoles((prev) => ({
       ...prev,
-      [role.apiCode]: prev[role.apiCode]?.filter((item) => item !== valueToRemove) || [],
+      [role.apiCode]:
+        prev[role.apiCode]?.filter((item) => item !== valueToRemove) || [],
     }));
   };
 
   return (
-    <Box
-      id="items-data"
-      sx={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: "20px",
-        width: "100%",
-      }}
-    >
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box id="items-data" sx={protocolModalItemStyles.container}>
+      <Box
+        id="protocol-id-tab"
+        sx={{ display: "flex", flexDirection: "column" }}
+      >
         <Typography variant="subtitle2">
           <span style={{ color: "red" }}>*</span> Protocol ID
         </Typography>
@@ -66,7 +62,6 @@ export function ProtocolModalItems({
             handleProtocolChange(e);
           }}
           helperText="Only Alphanumeric characters are allowed"
-          // disabled={protocolCode && selectedProtocol}
           sx={{
             "& .MuiOutlinedInput-root": {
               fontSize: "14px",
@@ -77,7 +72,7 @@ export function ProtocolModalItems({
       </Box>
 
       {rolesDropdownConfig.map((role) => (
-        <Box key={role.id}>
+        <Box id="roles-tab" key={role.id}>
           <Typography variant="subtitle2">
             <span style={{ color: "red" }}>*</span> {role.name}
           </Typography>
@@ -91,14 +86,9 @@ export function ProtocolModalItems({
               sx={{ height: "65px" }}
               renderValue={(selected) => (
                 <Box
+                  id="selected-item-chips"
                   onMouseDown={(e) => e.stopPropagation()}
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 0.5,
-                    maxHeight: "35px",
-                    overflowY: "scroll",
-                  }}
+                  sx={protocolModalItemStyles.selectedChipItemsContainer}
                 >
                   {selected.map((value) => (
                     <Chip

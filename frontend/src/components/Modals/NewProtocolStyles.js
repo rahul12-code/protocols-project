@@ -16,4 +16,13 @@ export const newProtocolStyles = {
     flexDirection: "column",
     gap: "15px",
   },
+  cancelContainerStyles: {
+    width: "30vw",
+    height: "30vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "30px",
+  },
 };

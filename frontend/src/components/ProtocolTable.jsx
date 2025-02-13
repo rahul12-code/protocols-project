@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 
 const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
-  
   const columnNames = [
     "Protocol ID",
     "RA Lead",
@@ -37,8 +36,9 @@ const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
   console.log(allProtocols);
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box id="protocols-container" sx={{ p: 4 }}>
       <Box
+        id="add-protocols-button"
         onClick={handleModalOpen}
         sx={{ display: "flex", justifyContent: "end", mb: 2 }}
       >
