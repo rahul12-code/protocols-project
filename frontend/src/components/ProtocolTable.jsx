@@ -26,14 +26,16 @@ const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
     async function fetchProtocols() {
       try {
         const allProtocolsData = await getAllProtocols();
-        setAllProtocols(allProtocolsData);
+        const sortedProtocols = allProtocolsData.sort((a, b) =>
+          a.protocol_key.localeCompare(b.protocol_key)
+        );
+        setAllProtocols(sortedProtocols);
       } catch (err) {
         throw new Error(err);
       }
     }
     fetchProtocols();
   }, []);
-  console.log(allProtocols);
 
   return (
     <Box id="protocols-container" sx={{ p: 4 }}>

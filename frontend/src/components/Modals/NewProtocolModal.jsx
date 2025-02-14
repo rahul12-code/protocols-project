@@ -78,7 +78,11 @@ export function NewProtocolModal({
             p.protocol_key === protocolCode ? protocol : p
           );
         } else {
-          return [...prev, protocol];
+          const allProtocolsData = [...prev, protocol];
+          const sortedProtocols = allProtocolsData.sort((a, b) =>
+            a.protocol_key.localeCompare(b.protocol_key)
+          );
+          return sortedProtocols;
         }
       });
       handleModalIsOpen(); // to close the modal
