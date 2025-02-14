@@ -8,6 +8,7 @@ import { updateProtocol } from "../../services/patch/updateProtocol";
 export function NewProtocolModal({
   open,
   onClose,
+  isEdit,
   handleModalIsOpen,
   allProtocols,
   setAllProtocols,
@@ -132,6 +133,7 @@ export function NewProtocolModal({
           required
         </Typography>
         <ProtocolModalItems
+          isEdit={isEdit}
           protocolCode={protocolCode}
           selectedRoles={selectedRoles}
           setSelectedRoles={setSelectedRoles}

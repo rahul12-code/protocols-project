@@ -12,7 +12,12 @@ import {
   Paper,
 } from "@mui/material";
 
-const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
+const ProtocolTable = ({
+  handleModalOpen,
+  allProtocols,
+  setAllProtocols,
+  setIsEdit,
+}) => {
   const columnNames = [
     "Protocol ID",
     "RA Lead",
@@ -90,7 +95,10 @@ const ProtocolTable = ({ handleModalOpen, allProtocols, setAllProtocols }) => {
                   <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => handleModalOpen(protocol)} // Pass protocol data for editing
+                    onClick={() => {
+                      handleModalOpen(protocol);
+                      setIsEdit(true);
+                    }} // Pass protocol data for editing
                   >
                     Edit
                   </Button>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import ProtocolTable from "../components/ProtocolTable";
 import { NewProtocolModal } from "../components/Modals/NewProtocolModal";
 import { useState } from "react";
@@ -8,6 +8,7 @@ const ProtocolsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [allProtocols, setAllProtocols] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
   const [selectedProtocol, setSelectedProtocol] = useState(null); // New state to store selected protocol
 
   const handleModalOpen = (protocol = null) => {
@@ -25,10 +26,12 @@ const ProtocolsPage = () => {
         handleModalOpen={handleModalOpen}
         allProtocols={allProtocols}
         setAllProtocols={setAllProtocols}
+        setIsEdit={setIsEdit}
       />
       <NewProtocolModal
         open={isModalOpen}
         onClose={() => setIsCancelOpen(true)}
+        isEdit={isEdit}
         handleModalIsOpen={handleModalOpen}
         allProtocols={allProtocols}
         setAllProtocols={setAllProtocols}
@@ -38,6 +41,7 @@ const ProtocolsPage = () => {
         isCancelOpen={isCancelOpen}
         handleCancelModalOpen={handleCancelModalOpen}
         handleModalOpen={handleModalOpen}
+        setIsEdit={setIsEdit}
       />
     </>
   );

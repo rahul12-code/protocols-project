@@ -4,6 +4,7 @@ export function CancelWarningModal({
   isCancelOpen,
   handleCancelModalOpen,
   handleModalOpen,
+  setIsEdit
 }) {
   return (
     <Modal
@@ -34,6 +35,7 @@ export function CancelWarningModal({
               e.preventDefault();
               handleModalOpen();
               handleCancelModalOpen();
+              setIsEdit(false)
             }}
           >
             Yes

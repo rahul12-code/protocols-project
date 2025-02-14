@@ -16,6 +16,7 @@ import { rolesDropdownConfig } from "../../../config/RolesDropdownConfig";
 import { getAllUsers } from "../../../services/get/getAllUsers";
 
 export function ProtocolModalItems({
+  isEdit,
   protocolCode,
   selectedRoles,
   handleRoleChange,
@@ -23,6 +24,7 @@ export function ProtocolModalItems({
   setSelectedRoles,
 }) {
   const [allUsers, setAllUsers] = useState([]);
+  console.log(selectedRoles);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -61,6 +63,7 @@ export function ProtocolModalItems({
           onChange={(e) => {
             handleProtocolChange(e);
           }}
+          disabled={isEdit ? true : false}
           helperText="Only Alphanumeric characters are allowed"
           sx={{
             "& .MuiOutlinedInput-root": {

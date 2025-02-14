@@ -6,7 +6,6 @@ import { ProtocolRole } from './entities/protocolrole.entity';
 import { User } from 'src/users/entities/user.entity';
 import { CreateProtocolDto } from './dto/create-protocol.dto';
 import { UpdateProtocolDto } from './dto/update-protocol.dto';
-import { error } from 'console';
 
 @Injectable()
 export class ProtocolsService {
